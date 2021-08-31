@@ -273,20 +273,34 @@ def find_negative_threshold(solver, sub_u_rate):
     gradient_minus = gradient_sub_u - gradient_spy
 
 
-    # plt.plot(x_axis, spy_times)
-    # plt.show()
-    # plt.plot(x_axis, sub_u_times)
-    # plt.show()
-    # plt.plot(x_axis, cumulative_spy)
-    # plt.show()
-    # plt.plot(x_axis, cumulative_sub_u)
-    # plt.show()
-    # plt.plot(x_axis, gradient_spy)
-    # plt.show()
-    # plt.plot(x_axis, gradient_sub_u)
-    # plt.show()
-    # plt.plot(x_axis, gradient_minus)
-    # plt.show()
+    plt.figure(dpi=400)
+    plt.plot(x_axis, spy_times)
+    plt.title('Probability Distribution of Spy-instances')
+    plt.show()
+    plt.figure(dpi=400)
+    plt.plot(x_axis, sub_u_times)
+    plt.title('Probability Distribution of Unlabeled-instances')
+    plt.show()
+    plt.figure(dpi=400)
+    plt.plot(x_axis, cumulative_spy)
+    plt.title('Cumulative Distribution of Spy-instances')
+    plt.show()
+    plt.figure(dpi=400)
+    plt.plot(x_axis, cumulative_sub_u)
+    plt.title('Cumulative Distribution of Unlabeled-instances')
+    plt.show()
+    plt.figure(dpi=400)
+    plt.plot(x_axis, gradient_spy)
+    plt.title('Gradient of Spy-instances')
+    plt.show()
+    plt.figure(dpi=400)
+    plt.plot(x_axis, gradient_sub_u)
+    plt.title('Gradient of Unlabeled-instances')
+    plt.show()
+    plt.figure(dpi=400)
+    plt.plot(x_axis, gradient_minus)
+    plt.title('Gradient of Unlabeled Minus Gradient of Spy')
+    plt.show()
     threshold = gradient_minus.argmax() * _stage_one_gradient_step
     print(threshold)
 
@@ -412,14 +426,16 @@ def find_stage2_threshold(model_path, u_mode):
             u_tp = tp_rate
             u_fp = fp_rate
             u_bst_th = u_th
-        print("threshold: " + str(u_th) + "   TP: "
-              + str(tp_rate) + "   FP: " + str(fp_rate) + "   GMean: " + str(index) + "\n\n")
+        # print("threshold: " + str(u_th) + "   TP: "
+        #       + str(tp_rate) + "   FP: " + str(fp_rate) + "   GMean: " + str(index) + "\n\n")
         u_th += _threshold_2_step
 
 
 
-    print(model_path +  "\n " +
-          "threshold: " + str(u_bst_th) + "   TP: " + str(u_tp) + "   FP: " + str(u_fp) + "   GMean: " + str(u_index))
+    # print(model_path +  "\n " +
+    #       "threshold: " + str(u_bst_th) + "   TP: " + str(u_tp) + "   FP: " + str(u_fp) + "   GMean: " + str(u_index))
+
+    return u_bst_th
 
 
 
@@ -461,6 +477,7 @@ def evaluation(model_path, threshold):
 
     print(fp_rate)
     print("TP: " + str(tp_rate) + "   FP: " + str(fp_rate) + "   GMean: " + str(math.sqrt(tp_rate * (1 - fp_rate))))
+
 
 def pdf_of_validation(solver):
     """
@@ -514,5 +531,10 @@ def stage2_iterator():
 
 if __name__ == "__main__":
     # find_stage2_threshold("./stage2_result/balanced/1e-3/liblinear/sub_u/logistic.pkl", "sub_u")
-    evaluation("./stage2_result/balanced/1e-3/liblinear/sub_u/logistic.pkl", 0.5648)
+    # evaluation("./stage2_result/balanced/1e-3/liblinear/sub_u/logistic.pkl", 0.5648)
     # find_negative_threshold("liblinear", 0.01)
+
+
+    # find_negative_threshold('liblinear', 0.01)
+
+    print(find_stage2_threshold("./stage2_result/balanced/1.0/liblinear/sub_u/logistic.pkl", "sub_u"))
